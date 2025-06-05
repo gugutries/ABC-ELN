@@ -1,1 +1,38 @@
+name: 📘 Build & Deploy ELN
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: 🔁 Convert .md logs to .ipynb
+        run: |
+          mkdir -p converted
+          for f in notebooks/*.md; do
+            jupytext --to ipynb "$f" -o "converted/$(basename "$f" .md).ipynb"
+          done
+
+      - name: 📚 Build Jupyter Book
+        run: jupyter-book build .
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/html
 
