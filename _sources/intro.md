@@ -7,6 +7,6 @@ Here you can:
 - View auto-generated Jupyter Notebooks
 - Submit new logs via the web form
 
-➡️ [📋 Submit a New Log](https://gugutries.github.io/abc-eln/logform/)
+➡️ [📋 Submit a New Log](https://gugutries.github.io/abc-eln/logform.html)
 
 > All entries are version-controlled and auto-deployed.
