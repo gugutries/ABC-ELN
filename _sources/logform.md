@@ -30,10 +30,10 @@ document.getElementById("logForm").addEventListener("submit", async (e) => {
   const markdown = `# Session Log – ${data.date} (${data.pid})\n\n**RA**: ${data.ra}  \n**Task Order**: ${data.tasks}  \n**Bonus**: ${data.bonus}\n\n---\n\n## Session Notes\n\n${data.notes}`;
   const encoded = btoa(unescape(encodeURIComponent(markdown)));
 
-  const res = await fetch("https://api.github.com/repos/YOUR_USERNAME/abc-eln/contents/" + filename, {
+  const res = await fetch("https://api.github.com/repos/gugutries/abc-eln/contents/" + filename, {
     method: "PUT",
     headers: {
-      Authorization: "Bearer YOUR_GITHUB_PAT",  // 🔒 use Netlify or env-secure backend ideally
+      Authorization: "Bearer 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",  // 🔒 use Netlify or env-secure backend ideally
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
