@@ -1,6 +1,12 @@
-# 🧠 ABC Lab ELN
+# 🧠 Welcome to ABC Lab ELN
 
-Welcome to the ABC Lab’s Electronic Lab Notebook.
+This is the internal Electronic Lab Notebook (ELN) for ABC Lab.
 
-[📋 Submit a new log](./logform/)
+Here you can:
+- Browse session logs by date and participant ID
+- View auto-generated Jupyter Notebooks
+- Submit new logs via the web form
 
+➡️ [📋 Submit a New Log](./logform/)
+
+> All entries are version-controlled and auto-deployed.
