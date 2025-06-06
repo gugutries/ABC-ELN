@@ -97,7 +97,7 @@ ${formData.get("notes") || "_No notes entered._"}
 
       const contentEncoded = btoa(unescape(encodeURIComponent(markdownContent)));
 
-      const response = await fetch("https://api.github.com/repos/YOUR_USERNAME/abc-eln/contents/" + filename, {
+      const response = await fetch("https://api.github.com/repos/gugutries/abc-eln/contents/" + filename, {
         method: "PUT",
         headers: {
           Authorization: "Bearer YOUR_GITHUB_PAT",
