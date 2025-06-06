@@ -1,123 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>ABC Lab – Session Log Entry</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f4fc;
-      max-width: 700px;
-      margin: auto;
-      padding: 2em;
-      color: #111;
-    }
-    h1 {
-      color: #3f0071;
-      margin-bottom: 0.5em;
-    }
-    label {
-      display: block;
-      margin: 1em 0 0.3em;
-      font-weight: bold;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.6em;
-      font-size: 1em;
-    }
-    button {
-      margin-top: 1.5em;
-      padding: 0.75em 1.5em;
-      font-size: 1em;
-      background-color: #3f0071;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    p#status {
-      margin-top: 1.5em;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
+<h1>📋 ABC Lab: Log Entry</h1>
 
-  <h1>📋 ABC Lab: Log Entry</h1>
+<form id="logForm">
+  <label>Date</label>
+  <input type="date" name="date" required>
 
-  <form id="logForm">
-    <label>Date</label>
-    <input type="date" name="date" required>
+  <label>Participant ID</label>
+  <input type="text" name="pid" required>
 
-    <label>Participant ID</label>
-    <input type="text" name="pid" required>
+  <label>RA Name</label>
+  <input type="text" name="ra" required>
 
-    <label>RA Name</label>
-    <input type="text" name="ra" required>
+  <label>Task Order</label>
+  <input type="text" name="tasks" placeholder="e.g. th, tm, socialRA" required>
 
-    <label>Task Order</label>
-    <input type="text" name="tasks" placeholder="e.g. th, tm, socialRA" required>
+  <label>Bonus</label>
+  <input type="text" name="bonus" placeholder="$4 or None">
 
-    <label>Bonus</label>
-    <input type="text" name="bonus" placeholder="$4 or None">
+  <label>Session Notes</label>
+  <textarea name="notes" rows="5" placeholder="Adverse events, issues, behavior..."></textarea>
 
-    <label>Session Notes</label>
-    <textarea name="notes" rows="6" placeholder="Adverse events, observations, technical issues..."></textarea>
+  <button type="submit">Submit Log</button>
+</form>
 
-    <button type="submit">Submit Log</button>
-  </form>
+<script>
+document.getElementById("logForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  const filename = `notebooks/${data.date}_${data.pid}.md`;
+  const markdown = `# Session Log – ${data.date} (${data.pid})\n\n**RA**: ${data.ra}  \n**Task Order**: ${data.tasks}  \n**Bonus**: ${data.bonus}\n\n---\n\n## Session Notes\n\n${data.notes}`;
+  const encoded = btoa(unescape(encodeURIComponent(markdown)));
 
-  <p id="status"></p>
+  const res = await fetch("https://api.github.com/repos/YOUR_USERNAME/abc-eln/contents/" + filename, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer YOUR_GITHUB_PAT",  // 🔒 use Netlify or env-secure backend ideally
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: `Add log for ${data.pid} on ${data.date}`,
+      content: encoded
+    })
+  });
 
-  <script>
-    const form = document.getElementById("logForm");
-    const status = document.getElementById("status");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-      const date = formData.get("date");
-      const pid = formData.get("pid");
-      const filename = `notebooks/${date}_${pid}.md`;
-
-      const markdownContent = `
-# Session Log – ${date} (${pid})
-
-**RA**: ${formData.get("ra")}  
-**Task Order**: ${formData.get("tasks")}  
-**Bonus**: ${formData.get("bonus")}
-
----
-
-## Session Notes
-
-${formData.get("notes") || "_No notes entered._"}
-      `;
-
-      const contentEncoded = btoa(unescape(encodeURIComponent(markdownContent)));
-
-      const response = await fetch("https://api.github.com/repos/gugutries/abc-eln/contents/" + filename, {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer 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",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: `Add log for ${pid} on ${date}`,
-          content: contentEncoded
-        })
-      });
-
-      if (response.ok) {
-        status.innerText = "✅ Log successfully submitted!";
-      } else {
-        const errorText = await response.text();
-        status.innerText = "❌ Failed to submit log.";
-        console.error(errorText);
-      }
-    });
-  </script>
-
-</body>
-</html>
+  alert(res.ok ? "✅ Log submitted!" : "❌ Submission failed. Check console.");
+});
+</script>
