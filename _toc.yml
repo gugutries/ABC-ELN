@@ -2,4 +2,4 @@ format: jb-book
 root: intro
 chapters:
   - glob: notebooks/*.md
-
+  - file: logform
